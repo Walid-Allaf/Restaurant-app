@@ -62,11 +62,11 @@ const Filters = () => {
       </div>
 
       <div className='flex flex-row items-center justify-center gap-4 select-none max-w-full'>
-        <div className='flex flex-row flex-wrap items-center justify-center gap-3'>
+        <div className='flex flex-row flex-wrap items-center justify-center gap-1 xs:gap-3'>
 
           {/* Free Delivery */}
         <p
-          className={`min-w-[120px] max-w-[130px] h-[42px] flex flex-1 items-center justify-center p-2 rounded-full border border-gray-500 cursor-pointer font-bold ${fieldsState.freeDelivery ? 'bg-green-600 text-white' : 'bg-teal-50 text-teal-900'}`}
+          className={`min-w-[110px] max-w-[130px] h-[42px] flex flex-1 items-center justify-center p-2 rounded-full border border-gray-500 cursor-pointer font-bold ${fieldsState.freeDelivery ? 'bg-green-600 text-white' : 'bg-teal-50 text-teal-900'}`}
           onClick={() => setFieldsState({searchLocation: '', searchName: '', freeDelivery: !fieldsState.freeDelivery, paymentMethod: '', rateValue: null})}
           >
             توصيل مجاني</p>
@@ -96,7 +96,7 @@ const Filters = () => {
         {/* Payment Methods */}
         <div className='relative'>
           <div
-            className='min-w-[150px] h-[42px] bg-teal-50 p-2 rounded-full border border-gray-500 cursor-pointer font-bold text-teal-900 flex flex-1 items-center justify-between gap-2'
+            className='min-w-[140px] h-[42px] bg-teal-50 p-2 rounded-full border border-gray-500 cursor-pointer font-bold text-teal-900 flex flex-1 items-center justify-between gap-2'
             onClick={() => {setExpandPay(!expandPay); setExpandRate(false)}}
             >
             <MdKeyboardArrowDown className='text-black' /> <p className='flex-1 text-center'>طرق الدفع</p> <BsFillCreditCard2BackFill className='text-black'/>
