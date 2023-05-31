@@ -4,7 +4,7 @@ import { BiTimeFive } from 'react-icons/bi';
 import { MdDeliveryDining, MdCurrencyLira } from 'react-icons/md';
 
 
-const Cards = ({name, img, paymentMethod, rate, time, delivary, lowest}) => (
+const Cards = ({name, img, paymentMethod, rate, time, delivery, lowest}) => (
   <div className='flex flex-col xs:flex-row-reverse w-full shadow-md rounded-xl overflow-hidden max-w-sm'>
 
     <div className='flex-[1.5] overflow-hidden relative rounded-xl overlay'>
@@ -38,7 +38,7 @@ const Cards = ({name, img, paymentMethod, rate, time, delivary, lowest}) => (
 
       <div className="flex items-center gap-1">
           {
-            delivary ? delivary : <p className='py-1 px-2 text-[14px] rounded-full text-white bg-green-600'>مجاناً</p>
+            delivery ? delivery : <p className='py-1 px-2 text-[14px] rounded-full text-white bg-green-600'>مجاناً</p>
           }
         <MdDeliveryDining className='text-red-500' />
       </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { cards } from '../constants';
+import { FakeDataCardsInfo } from '../fake data';
 import Cards from './Cards';
 
 // Icons
@@ -19,11 +19,7 @@ const Filters = () => {
   const [expandPay, setExpandPay] = useState(false);
   const [expandRate, setExpandRate] = useState(false);
 
-  const [searchLocation, setSearchLocation] = useState('');
-  const [searchName, setSearchName] = useState('');
-  const [freeDelivery, setFreeDelivery] = useState(null);
-  const [paymentmethod, setpaymentmethod] = useState('');
-  const [rateValue, setRateValue] = useState(null);
+  const [fieldsState, setFieldsState] = useState({searchLocation: '', searchName: '', freeDelivery: null, paymentMethod: '', rateValue: null});
 
   return (
     <section className='flex flex-col flex-wrap items-center justify-center gap-3 pt-6 blue'>
@@ -40,7 +36,7 @@ const Filters = () => {
               className='flex-1 w-full outline-none border-none text-center bg-gray-900 focus:text-start placeholder:text-white focus:placeholder:opacity-0'
               placeholder='العنوان'
               onBlur={(e) => {e.target.value = ''}}
-              onChange={(e) => {setSearchLocation(e.target.value); setSearchName(''); setFreeDelivery(null); setpaymentmethod(''); setRateValue(null)}}
+              onChange={(e) => setFieldsState({searchLocation: e.target.value, searchName: '', freeDelivery: null, paymentMethod: '', rateValue: null})}
             />
           <MdLocationOn className='text-white bg-gray-900 text-[22px]' />
           </div>
@@ -50,7 +46,7 @@ const Filters = () => {
       {/* Input Search By Name */}
       <div className='px-6 sm:px-16 w-full flex justify-center'>
         <div className='py-2 px-4 rounded-full font-bold text-gray-600 bg-white w-full xs:max-w-[250px] shadow-sm shadow-slate-50' >
-          <div className='flex items-center justify-center gap-2 bg-white'>
+          <div className='flex items-center justify-center gap-2'>
             <input
               type="text"
               name="name"
@@ -58,7 +54,7 @@ const Filters = () => {
               dir='rtl'
               className='flex-1 w-full outline-none border-none placeholder:text-gray-400 placeholder:font-light focus:placeholder:opacity-0'
               placeholder='ابحث عن مطعمك المفضل'
-              onChange={(e) => {setSearchName(e.target.value); setSearchLocation(''); setFreeDelivery(null); setpaymentmethod(''); setRateValue(null)}}
+              onChange={(e) => setFieldsState({searchLocation: '', searchName: e.target.value, freeDelivery: null, paymentMethod: '', rateValue: null})}
             />
           <FiSearch className='text-black text-[22px]' />
           </div>
@@ -68,12 +64,34 @@ const Filters = () => {
       <div className='flex flex-row items-center justify-center gap-4 select-none max-w-full'>
         <div className='flex flex-row flex-wrap items-center justify-center gap-3'>
 
-          {/* Free Delivary */}
+          {/* Free Delivery */}
         <p
-          className={`min-w-[120px] max-w-[130px] h-[42px] flex flex-1 items-center justify-center p-2 rounded-full border border-gray-500 cursor-pointer font-bold ${freeDelivery ? 'bg-green-600 text-white' : 'bg-teal-50 text-teal-900'}`}
-          onClick={() => {setFreeDelivery(!freeDelivery); setSearchLocation(''); setSearchName(''); setpaymentmethod(''); setRateValue(null)}}
+          className={`min-w-[120px] max-w-[130px] h-[42px] flex flex-1 items-center justify-center p-2 rounded-full border border-gray-500 cursor-pointer font-bold ${fieldsState.freeDelivery ? 'bg-green-600 text-white' : 'bg-teal-50 text-teal-900'}`}
+          onClick={() => setFieldsState({searchLocation: '', searchName: '', freeDelivery: !fieldsState.freeDelivery, paymentMethod: '', rateValue: null})}
           >
             توصيل مجاني</p>
+
+
+        {/* The Rate */}
+        <div className='relative'>
+          <div
+            className='bg-teal-50 p-2 rounded-full border border-gray-500 cursor-pointer font-bold text-teal-900 flex flex-1 items-center gap-2'
+            onClick={() => {setExpandRate(!expandRate); setExpandPay(false)}}
+            >
+            <MdKeyboardArrowDown className='text-black font-medium' /> التقييم  <AiFillStar className='text-black' />
+          </div>
+
+          <input
+            className={`${expandRate ? 'flex flex-col absolute top-[120%] left-1/2 -translate-x-1/2 z-50 bg-teal-50 text-gray-600 border border-gray-500 w-[115px] outline-none rounded-lg p-2' : 'hidden'}`}
+            onChange={(e) => setFieldsState({searchLocation: '', searchName: '', freeDelivery: null, paymentMethod: '', rateValue: Number(e.target.value)})}
+            type="number"
+            name="rate"
+            id="rate"
+            min={ 0 }
+            max={ 5 }
+            step={ 0.1 }
+            />
+        </div>
 
         {/* Payment Methods */}
         <div className='relative'>
@@ -89,7 +107,7 @@ const Filters = () => {
                   <p
                     key={ option.id }
                     className='py-1 px-2 hover:bg-green-600 hover:text-white rounded-lg cursor-pointer'
-                    onClick={() => {setExpandPay(!expandPay); setSearchLocation(''); setpaymentmethod(option.id); setSearchName(''); setFreeDelivery(null); setRateValue(null)}}
+                    onClick={() => {setFieldsState({searchLocation: '', searchName: '', freeDelivery: null, paymentMethod: option.id, rateValue: null}); setExpandPay(!expandPay)}}
                     >
                       { option.name }
                     </p>
@@ -98,46 +116,27 @@ const Filters = () => {
           </div>
         </div>
 
-        {/* The Rate */}
-        <div className='relative'>
-          <div
-            className='bg-teal-50 p-2 rounded-full border border-gray-500 cursor-pointer font-bold text-teal-900 flex flex-1 items-center gap-2'
-            onClick={() => {setExpandRate(!expandRate); setExpandPay(false)}}
-            >
-            <MdKeyboardArrowDown className='text-black font-medium' /> التقييم  <AiFillStar className='text-black' />
-          </div>
-
-          <input
-            className={`${expandRate ? 'flex flex-col absolute top-[120%] left-1/2 -translate-x-1/2 z-50 bg-teal-50 text-gray-600 border border-gray-500 w-[115px] outline-none rounded-lg p-2' : 'hidden'}`}
-            onChange={(e) => {setRateValue(Number(e.target.value)); setSearchLocation(''); setSearchName(''); setpaymentmethod(''); setFreeDelivery(null)}}
-            type="number"
-            name="rate"
-            id="rate"
-            min={ 0 }
-            max={ 5 }
-            step={ 0.1 }
-            />
-        </div>
-
         </div>
       </div>
 
 
       <section className="flex flex-row flex-wrap items-center justify-center gap-4 lg:gap-8 pb-2 overflow-hidden px-6 sm:px-16">
       {
-        cards.filter((card) => {
-          if (searchLocation === "" && searchName === "" && freeDelivery === null && paymentmethod === '' && (rateValue === (null) || rateValue === (0))) {
+        FakeDataCardsInfo.filter((card) => {
+          if (fieldsState.searchLocation === "" && fieldsState.searchName === "" && fieldsState.freeDelivery === null && fieldsState.paymentMethod === '' && (fieldsState.rateValue === (null) || fieldsState.rateValue === (0))) {
             return card;
-          } else if (card.location.toLowerCase().includes(searchLocation.toLowerCase()) && searchLocation !== "") {
+          } else if (card.location.toLowerCase().includes(fieldsState.searchLocation.toLowerCase()) && fieldsState.searchLocation !== "") {
             return card;
-          } else if (card.name.toLowerCase().includes(searchName.toLowerCase()) && searchName !== "") {
+          } else if (card.name.toLowerCase().includes(fieldsState.searchName.toLowerCase()) && fieldsState.searchName !== "") {
             return card;
-          } else if (freeDelivery === !Boolean(card.delivary)) {
+          } else if (fieldsState.freeDelivery === !Boolean(card.delivery)) {
             return card;
-          } else if (paymentmethod === card.paymentmethod) {
+          } else if (fieldsState.paymentMethod === card.paymentMethod) {
             return card;
-          } else if (Number(Number(rateValue).toFixed(1)) === Number(Number(card.rate).toFixed(1))) {
+          } else if (Number(Number(fieldsState.rateValue).toFixed(1)) === Number(Number(card.rate).toFixed(1))) {
             return card;
+          } else {
+            return false;
           }
         }).map(( item ) => {
           return (
@@ -149,7 +148,7 @@ const Filters = () => {
               paymentMethod={ item.paymentImg}
               rate={ item.rate }
               time={ item.time }
-              delivary={ item.delivary }
+              delivery={ item.delivery }
               lowest={ item.lowest }
             />
           )

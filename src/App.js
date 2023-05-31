@@ -1,9 +1,9 @@
 import React from "react";
-import { Filters } from "./components";
+import { FilteredCards } from "./components";
 
 const App = () => (
   <div className="w-full">
-    <Filters />
+    <FilteredCards />
   </div>
 );
 

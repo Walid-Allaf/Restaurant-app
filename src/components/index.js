@@ -1,4 +1,4 @@
 import Cards from "./Cards";
-import Filters from "./Filters";
+import FilteredCards from "./FilteredCards";
 
-export { Cards, Filters };
+export { Cards, FilteredCards };
