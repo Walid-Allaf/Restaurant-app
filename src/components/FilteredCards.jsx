@@ -16,6 +16,24 @@ const Filters = () => {
   const [expandRate, setExpandRate] = useState(false);
   const [fieldsState, setFieldsState] = useState({searchLocation: '', searchName: '', freeDelivery: null, paymentMethod: '', rateValue: null});
 
+  const handleSearch = ( card ) => {
+    if (fieldsState.searchLocation === "" && fieldsState.searchName === "" && fieldsState.freeDelivery === null && fieldsState.paymentMethod === '' && (fieldsState.rateValue === (null) || fieldsState.rateValue === (0))) {
+      return card;
+    } else if (card.location.toLowerCase().includes(fieldsState.searchLocation.toLowerCase()) && fieldsState.searchLocation !== "") {
+      return card;
+    } else if (card.name.toLowerCase().includes(fieldsState.searchName.toLowerCase()) && fieldsState.searchName !== "") {
+      return card;
+    } else if (fieldsState.freeDelivery === !Boolean(card.delivery)) {
+      return card;
+    } else if (fieldsState.paymentMethod === card.paymentMethod) {
+      return card;
+    } else if (Number(Number(fieldsState.rateValue).toFixed(1)) === Number(Number(card.rate).toFixed(1))) {
+      return card;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <section className='flex flex-col flex-wrap items-center justify-center gap-3 pt-6 blue'>
 
@@ -88,23 +106,7 @@ const Filters = () => {
 
       <section className="flex flex-row flex-wrap items-center justify-center gap-4 lg:gap-8 pb-2 overflow-hidden px-6 sm:px-16">
       {
-        FakeDataCardsInfo.filter((card) => {
-          if (fieldsState.searchLocation === "" && fieldsState.searchName === "" && fieldsState.freeDelivery === null && fieldsState.paymentMethod === '' && (fieldsState.rateValue === (null) || fieldsState.rateValue === (0))) {
-            return card;
-          } else if (card.location.toLowerCase().includes(fieldsState.searchLocation.toLowerCase()) && fieldsState.searchLocation !== "") {
-            return card;
-          } else if (card.name.toLowerCase().includes(fieldsState.searchName.toLowerCase()) && fieldsState.searchName !== "") {
-            return card;
-          } else if (fieldsState.freeDelivery === !Boolean(card.delivery)) {
-            return card;
-          } else if (fieldsState.paymentMethod === card.paymentMethod) {
-            return card;
-          } else if (Number(Number(fieldsState.rateValue).toFixed(1)) === Number(Number(card.rate).toFixed(1))) {
-            return card;
-          } else {
-            return false;
-          }
-        }).map(( item ) => {
+        FakeDataCardsInfo.filter((card) => handleSearch( card )).map(( item ) => {
           return (
             // Cards Component
             <Cards key={ item.id } name={ item.name } img={ item.img } paymentMethod={ item.paymentImg} rate={ item.rate } time={ item.time } delivery={ item.delivery } lowest={ item.lowest } />
