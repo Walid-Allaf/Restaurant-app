@@ -4,6 +4,10 @@ import Cards from './Cards';
 import TextField from './form/TextField';
 import ButtonWithIcon from './form/ButtonWithIcon';
 
+import store from './store';
+import { useSelector } from 'react-redux';
+import { searchingLocation, searchingName, freeDelivery, choosePaymentMethod, searchRate } from './store';
+
 const Filters = () => {
 
   const options = [
@@ -14,20 +18,29 @@ const Filters = () => {
   
   const [expandPay, setExpandPay] = useState(false);
   const [expandRate, setExpandRate] = useState(false);
-  const [fieldsState, setFieldsState] = useState({searchLocation: '', searchName: '', freeDelivery: null, paymentMethod: '', rateValue: null});
+    
+  const location = useSelector(state => state.searchLocation)
+  const name = useSelector(state => state.searchName)
+  const delivery = useSelector(state => state.freeDelivery)
+  const paymentMethod = useSelector(state => state.paymentMethod)
+  const rateValue = useSelector(state => state.rateValue)
 
   const handleSearch = ( card ) => {
-    if (fieldsState.searchLocation === "" && fieldsState.searchName === "" && fieldsState.freeDelivery === null && fieldsState.paymentMethod === '' && (fieldsState.rateValue === (null) || fieldsState.rateValue === (0))) {
+    if (location === "" && name === "" && delivery === null && paymentMethod === '' && (rateValue === (null) || rateValue === (0))) {
       return card;
-    } else if (card.location.toLowerCase().includes(fieldsState.searchLocation.toLowerCase()) && fieldsState.searchLocation !== "") {
+    } else if (card.location.toLowerCase().includes(location) && location !== '') {
+      console.log('pass location')
+      console.log("Initial State ", store.getState())
       return card;
-    } else if (card.name.toLowerCase().includes(fieldsState.searchName.toLowerCase()) && fieldsState.searchName !== "") {
+    } else if (card.name.toLowerCase().includes(name) && name !== '') {
+      console.log('pass name')
       return card;
-    } else if (fieldsState.freeDelivery === !Boolean(card.delivery)) {
+    } else if (delivery === !Boolean(card.delivery)) {
+      console.log('pass free')
       return card;
-    } else if (fieldsState.paymentMethod === card.paymentMethod) {
+    } else if (paymentMethod === card.paymentMethod) {
       return card;
-    } else if (Number(Number(fieldsState.rateValue).toFixed(1)) === Number(Number(card.rate).toFixed(1))) {
+    } else if (Number(Number(rateValue).toFixed(1)) === Number(Number(card.rate).toFixed(1))) {
       return card;
     } else {
       return false;
@@ -42,7 +55,7 @@ const Filters = () => {
         <div className='py-2 px-4 rounded-2xl font-bold text-white bg-gray-900 w-full xs:max-w-[250px]' >
 
           <TextField name='location' id='location' placeholder='العنوان' styles='bg-gray-900 focus:text-start placeholder:text-white text-center'
-            onChange={(e) => setFieldsState({searchLocation: e.target.value, searchName: '', freeDelivery: null, paymentMethod: '', rateValue: null})}
+            onChange={(e) => store.dispatch(searchingLocation(e.target.value))}
           />
 
         </div>
@@ -53,7 +66,7 @@ const Filters = () => {
         <div className='py-2 px-4 rounded-full font-bold text-gray-600 bg-white w-full xs:max-w-[250px] shadow-sm shadow-slate-50' >
           
           <TextField name='name' id='name' placeholder='ابحث عن مطعمك المفضل' styles='placeholder:text-gray-400 placeholder:font-light'
-            onChange={(e) => setFieldsState({searchLocation: '', searchName: e.target.value, freeDelivery: null, paymentMethod: '', rateValue: null})}
+            onChange={(e) => store.dispatch(searchingName(e.target.value))}
           />
 
         </div>
@@ -63,8 +76,8 @@ const Filters = () => {
         <div className='flex flex-row flex-wrap items-center justify-center gap-1 xs:gap-3'>
 
         {/* Free Delivery */}
-        <p className={`min-w-[110px] max-w-[130px] h-[42px] flex flex-1 items-center justify-center p-2 rounded-full border border-gray-500 cursor-pointer font-bold ${fieldsState.freeDelivery ? 'bg-green-600 text-white' : 'bg-teal-50 text-teal-900'}`}
-          onClick={() => setFieldsState({searchLocation: '', searchName: '', freeDelivery: !fieldsState.freeDelivery, paymentMethod: '', rateValue: null})}
+        <p className={`min-w-[110px] max-w-[130px] h-[42px] flex flex-1 items-center justify-center p-2 rounded-full border border-gray-500 cursor-pointer font-bold ${delivery ? 'bg-green-600 text-white' : 'bg-teal-50 text-teal-900'}`}
+          onClick={() => store.dispatch(freeDelivery(!delivery))}
         >
           توصيل مجاني</p>
 
@@ -74,7 +87,7 @@ const Filters = () => {
           <ButtonWithIcon title='التقييم' icon='star' onClick={() => {setExpandRate(!expandRate); setExpandPay(false)}} />
           <input
             className={`${expandRate ? 'flex flex-col absolute top-[120%] left-1/2 -translate-x-1/2 z-50 bg-teal-50 text-gray-600 border border-gray-500 w-[115px] outline-none rounded-lg p-2' : 'hidden'}`}
-            onChange={(e) => setFieldsState({searchLocation: '', searchName: '', freeDelivery: null, paymentMethod: '', rateValue: Number(e.target.value)})}
+            onChange={(e) => store.dispatch(searchRate(Number(e.target.value)))}
             type="number"
             name="rate"
             id="rate"
@@ -91,7 +104,7 @@ const Filters = () => {
             {
               options.map(( option ) => (
                 <p key={ option.id } className='py-1 px-2 hover:bg-green-600 hover:text-white rounded-lg cursor-pointer'
-                  onClick={() => {setFieldsState({searchLocation: '', searchName: '', freeDelivery: null, paymentMethod: option.id, rateValue: null}); setExpandPay(!expandPay)}}
+                  onClick={() => {store.dispatch(choosePaymentMethod(option.id)); setExpandPay(!expandPay)}}
                 >
                   { option.name }
                 </p>
