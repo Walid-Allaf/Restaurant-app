@@ -1,5 +1,5 @@
 import Cards from "./Cards";
-import FilteredCards from "./FilteredCards";
+import FilteredCards from "./filteredCards/FilteredCards";
 import TextField from "./form/TextField";
 import ButtonWithIcon from "./form/ButtonWithIcon";
 
